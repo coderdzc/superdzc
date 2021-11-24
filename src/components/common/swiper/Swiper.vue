@@ -13,7 +13,7 @@
       <slot name="spots" v-if="showspots && picsCount > 1">
         <div
           class="spots"
-          v-for="(item, index) in pics"
+          v-for="(item, index) in picsCount"
           :key="index"
           :class="{ active: index == currentIndex - 1 }"
         ></div>
@@ -26,7 +26,6 @@
 export default {
   data() {
     return {
-      pics: [1, 2, 3, 4], // 模拟轮播图元素
       picsCount: 0, // 元素数量
       totalWidth: 0, //swiper总宽度
       swiperStyle: {}, //swiper的样式
@@ -62,9 +61,10 @@ export default {
       this.handleDom();
       // 开启定时器
       this.startTimerAuto();
-    }, 100);
+    }, 500);
   },
   methods: {
+    //操作dom元素，克隆节点并且调整好位置
     handleDom() {
       const swiper = document.querySelector(".swiper");
       const swiperEls = document.querySelectorAll(".swiper .swiper-item");
@@ -82,7 +82,6 @@ export default {
     startTimerAuto() {
       this.playTimer = setInterval(() => {
         this.currentIndex++;
-        console.log(this.currentIndex);
         this.scrollAnimate(-this.currentIndex * this.totalWidth);
       }, this.timerGap);
     },
@@ -163,8 +162,6 @@ export default {
   overflow: hidden;
   position: relative;
   .swiper {
-    text-align: center;
-    font-size: 50px;
     display: flex;
   }
   .spotbox {

@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-item">
+  <div class="recommend">
     <slot></slot>
   </div>
 </template>
@@ -9,12 +9,9 @@ export default {};
 </script>
 
 <style scoped lang="less">
-.swiper-item {
-  width: 100%;
-  flex-shrink: 0;
-  img {
-    width: 100%;
-    height: 100%;
-  }
+.recommend {
+  display: flex;
+  padding: 15px 0 30px;
+  border-bottom: 10px solid #eee;
 }
 </style>
