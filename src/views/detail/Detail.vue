@@ -1,6 +1,10 @@
 <template>
   <div class="detail">
-    <DetailNavbar class="detailnav"></DetailNavbar>
+    <DetailNavbar
+      class="detailnav"
+      @navClick="navClick"
+      :currentIndex="currentIndex"
+    />
     <Scroll
       :pullUpLoad="true"
       ref="scroll"
@@ -8,23 +12,24 @@
       :probeType="3"
       @positionupdata="positionupdata"
     >
-      <DetailSwiper :topImages="topImages" @imgLoad="imgLoad"></DetailSwiper>
-      <DetailInfo :info="itemInfo"></DetailInfo>
+      <DetailSwiper :topImages="topImages" @imgLoad="imgLoad" />
+      <DetailInfo :info="itemInfo" />
       <div class="border"></div>
-      <DetailShopInfo :shopInfo="shopInfo"></DetailShopInfo>
+      <DetailShopInfo :shopInfo="shopInfo" />
       <div class="border"></div>
       <DetailItemInfo
         :detailInfo="detailInfo"
-        @itemLoad="itemLoad"
         class="detailItemInfo"
         ref="itemInfo"
-      ></DetailItemInfo>
-      <DetailParams :params="params"></DetailParams>
-      <DetailComment :commentInfo="commentInfo"></DetailComment>
+        @itemLoad="itemLoad"
+      />
+      <DetailParams :params="params" ref="params" />
+      <DetailComment :commentInfo="commentInfo" ref="comment" />
       <div class="border"></div>
-      <GoodsList :goodslist="recommend" class="goodslist"></GoodsList>
+      <GoodsList :goodslist="recommend" class="goodslist" ref="recommend" />
     </Scroll>
-    <Gotop :gotopshow="gotopshow" class="gotop" @btnclick="btnclick"></Gotop>
+    <DetailBottomBar />
+    <Gotop :gotopshow="gotopshow" class="gotop" @btnclick="btnclick" />
   </div>
 </template>
 
@@ -38,6 +43,7 @@ import DetailParams from "./detailchild/DetailParams.vue";
 import DetailComment from "./detailchild/DetailComment.vue";
 import Gotop from "components/common/gotop/GoTop.vue";
 import GoodsList from "components/context/goodslist/GoodsList.vue";
+import DetailBottomBar from "./detailchild/DetailBottomBar.vue";
 
 import {
   GetDetailData,
@@ -48,8 +54,8 @@ import {
   params,
 } from "network/detail";
 import { throttle } from "common/throttle.js";
-
 import Scroll from "components/common/scroll/Scroll.vue";
+import { goTopMix } from "common/mixin.js";
 export default {
   name: "Detail",
   data() {
@@ -60,10 +66,11 @@ export default {
       detailInfo: {},
       loadEnd: null,
       params: {},
-      gotopshow: false,
       offsetTop: 0,
       commentInfo: {},
       recommend: [],
+      themeTop: [],
+      currentIndex: 0,
     };
   },
   components: {
@@ -74,30 +81,49 @@ export default {
     DetailItemInfo,
     DetailParams,
     DetailComment,
+    DetailBottomBar,
     GoodsList,
     Scroll,
     Gotop,
   },
+  mixins: [goTopMix],
   created() {
     this.GetDetailData();
     this.GetDetailRecommend();
   },
   mounted() {
-    this.loadEnd = throttle(this.$refs.scroll.refresh, 500);
+    this.loadEnd = throttle(this.computedTop, 100);
   },
   methods: {
     //事件监听函数
-    itemLoad() {
-      this.loadEnd();
-    },
-    btnclick() {
-      this.$refs.scroll.scrollTo(0, 0);
-    },
     positionupdata(position) {
       this.gotopshow = position <= -this.offsetTop ? true : false;
+      for (let i = 0; i < this.themeTop.length - 1; i++) {
+        if (
+          -position >= -this.themeTop[i] &&
+          -position < -this.themeTop[i + 1]
+        ) {
+          this.currentIndex = i;
+        }
+      }
     },
     imgLoad() {
       this.offsetTop = this.$refs.itemInfo.$el.offsetTop;
+    },
+    navClick(index) {
+      this.$refs.scroll.refresh();
+      this.$refs.scroll.scrollTo(0, this.themeTop[index]);
+    },
+    computedTop() {
+      this.themeTop = [];
+      this.themeTop.push(0);
+      this.themeTop.push(-this.$refs.params.$el.offsetTop);
+      this.themeTop.push(-this.$refs.comment.$el.offsetTop);
+      this.themeTop.push(-this.$refs.recommend.$el.offsetTop);
+      this.themeTop.push(-Number.MAX_VALUE);
+    },
+    itemLoad() {
+      this.loadEnd();
     },
     //网络请求函数
     GetDetailData() {
@@ -137,7 +163,7 @@ export default {
 
 <style scoped lang="less">
 .detail {
-  padding-top: 44px;
+  padding-top: 0.586667rem;
   .detailnav {
     position: fixed;
     top: 0;
@@ -148,22 +174,22 @@ export default {
   }
   .scroll {
     position: absolute;
-    top: 44px;
-    bottom: 0px;
+    top: 0.586667rem;
+    bottom: 0.653333rem;
     left: 0;
     right: 0;
     z-index: 99;
     background-color: #fff;
     .border {
       width: 100%;
-      height: 5px;
+      height: 0.066667rem;
       background-color: #eee;
     }
     .detailItemInfo {
-      border-bottom: 5px solid #eee;
+      border-bottom: 0.066667rem solid #eee;
     }
     .goodslist {
-      margin: 15px 0;
+      margin: 0.2rem 0;
     }
   }
   .gotop {

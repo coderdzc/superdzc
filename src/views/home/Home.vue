@@ -39,14 +39,14 @@ import NavBar from "components/common/navbar/NavBar";
 import HomeSwiper from "views/home/homechild/Homeswiper";
 import HomeRcommend from "./homechild/Homerecommend.vue";
 import Scroll from "components/common/scroll/Scroll";
-import GoTop from "components/common/gotop/GoTop";
 
 import Homehot from "./homechild/Homehot.vue";
 import TabControl from "components/context/tabcontrol/Tabcontrol";
 import GoodsList from "components/context/goodslist/GoodsList";
 
 import { getHomeData, getHomeGoods } from "network/home";
-import { throttle } from "common/throttle";
+import { goTopMix } from "common/mixin.js";
+
 export default {
   components: {
     NavBar,
@@ -56,8 +56,8 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    GoTop,
   },
+  mixins: [goTopMix],
   data() {
     return {
       banners: [],
@@ -68,10 +68,10 @@ export default {
         sell: { page: 0, list: [] },
       },
       goodsType: "pop",
-      gotopshow: false,
       tabOffsetTop: 0,
       isfixed: false,
       saveY: 0,
+      itemImageLoad: null,
     };
   },
   created() {
@@ -85,6 +85,7 @@ export default {
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
   },
   deactivated() {
+    //保存当前位置
     this.saveY = this.$refs.scroll.Scroll.y;
   },
   methods: {
@@ -106,9 +107,6 @@ export default {
       }
       this.$refs.TabControl1.currentIndex = index;
       this.$refs.TabControl2.currentIndex = index;
-    },
-    btnclick() {
-      this.$refs.scroll.scrollTo(0, 0);
     },
     positionupdata() {
       //显示隐藏返回顶部判断
@@ -137,12 +135,6 @@ export default {
         this.goods[type].list.push(...res.data.list);
       });
     },
-  },
-  mounted() {
-    const throttleLoad = throttle(this.$refs.scroll.refresh, 500);
-    this.$bus.$on("itemImageLoad", () => {
-      throttleLoad();
-    });
   },
 };
 </script>

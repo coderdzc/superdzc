@@ -29,6 +29,7 @@ export default {
       click: true,
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad,
+      observeDOM: true,
     });
     this.Scroll.on("scroll", (position) => {
       this.$emit("positionupdata", position.y);
