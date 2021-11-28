@@ -13,13 +13,14 @@ export function GetDetailRecommend() {
 }
 
 export class goods {
-    constructor(iteminfo, columns, services) {
+    constructor(iteminfo, columns, services, iid) {
         this.title = iteminfo.title
-        this.price = iteminfo.price
+        this.price = "¥" + iteminfo.lowNowPrice
         this.oldPrice = iteminfo.oldPrice
         this.discountDesc = iteminfo.discountDesc
         this.columns = columns
         this.services = services
+        this.id = iid
     }
 }
 

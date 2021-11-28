@@ -28,7 +28,7 @@
       <div class="border"></div>
       <GoodsList :goodslist="recommend" class="goodslist" ref="recommend" />
     </Scroll>
-    <DetailBottomBar />
+    <DetailBottomBar @joinClick="joinClick" />
     <Gotop :gotopshow="gotopshow" class="gotop" @btnclick="btnclick" />
   </div>
 </template>
@@ -125,6 +125,18 @@ export default {
     itemLoad() {
       this.loadEnd();
     },
+    joinClick() {
+      const goods = {};
+      goods.img = this.topImages[0];
+      goods.title = this.itemInfo.title;
+      goods.desc = this.detailInfo.desc;
+      goods.price = this.itemInfo.price;
+      goods.id = this.itemInfo.id;
+      this.$store.dispatch("checkGoods", goods).then((res) => {
+        this.$toast.show(res);
+      });
+    },
+
     //网络请求函数
     GetDetailData() {
       //请求详情数据
@@ -135,7 +147,8 @@ export default {
         this.itemInfo = new goods(
           res.result.itemInfo,
           res.result.columns,
-          res.result.shopInfo.services
+          res.result.shopInfo.services,
+          res.iid
         );
         //获取店铺数据
         this.shopInfo = new shop(res.result.shopInfo);

@@ -13,7 +13,7 @@
       <div slot="text" class="text">收藏</div>
     </BottomBarItem>
     <BottomBarItem class="join"
-      ><div slot="text">加入购物车</div></BottomBarItem
+      ><div slot="text" @click="joinClick">加入购物车</div></BottomBarItem
     >
     <BottomBarItem class="buy"><div slot="text">购买</div></BottomBarItem>
   </BottomBar>
@@ -26,6 +26,11 @@ export default {
   components: {
     BottomBar,
     BottomBarItem,
+  },
+  methods: {
+    joinClick() {
+      this.$emit("joinClick");
+    },
   },
 };
 </script>
