@@ -176,7 +176,6 @@ export default {
 
 <style scoped lang="less">
 .detail {
-  padding-top: 0.586667rem;
   .detailnav {
     position: fixed;
     top: 0;
@@ -187,8 +186,8 @@ export default {
   }
   .scroll {
     position: absolute;
-    top: 0.586667rem;
-    bottom: 0.653333rem;
+    top: 44px; /* no */
+    bottom: 49px; /* no */
     left: 0;
     right: 0;
     z-index: 99;

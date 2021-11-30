@@ -29,7 +29,7 @@ export default {
     CheckBox,
   },
   computed: {
-    ...mapGetters(["cartList", "isAllCheck"]),
+    ...mapGetters(["cartList"]),
   },
   methods: {
     btnclick(index) {

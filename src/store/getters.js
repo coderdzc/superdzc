@@ -10,8 +10,4 @@ export default {
     cartList(state) {
         return state.carGoods
     },
-
-    isAllCheck(state) {
-        return state.isAllCheck
-    }
 }

@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     showImg() {
-      return this.goodsmsg.image || this.goodsmsg.show.img;
+      return this.goodsmsg.img || this.goodsmsg.image || this.goodsmsg.show.img;
     },
   },
   props: {
